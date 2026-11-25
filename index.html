@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Photobooth Apresiasi 2026</title>
+  <meta name="description" content="Photobooth Majlis Apresiasi Kecemerlangan SK (FELDA) Jengka 24">
+  <meta name="theme-color" content="#3b0764">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Photobooth">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body data-tema="ungu">
+
+<!-- ============ SKRIN 1: LAMAN UTAMA ============ -->
+<section id="skrin-utama" class="skrin aktif" aria-label="Laman utama">
+  <header class="hero">
+    <img class="hero-logo" src="icons/icon-192.png" alt="" width="64" height="64">
+    <p class="hero-kecil" id="nama-sekolah">SK (FELDA) Jengka 24</p>
+    <h1 id="nama-majlis">Majlis Apresiasi Kecemerlangan 2026</h1>
+    <p class="hero-sub">Photobooth — ambil gambar kenangan anda!</p>
+  </header>
+
+  <main class="kandungan">
+    <div id="kotak-pasang" class="kad pasang" hidden>
+      <div>
+        <strong>Pasang sebagai aplikasi</strong>
+        <p>Buka lebih cepat dan boleh guna tanpa internet.</p>
+      </div>
+      <button id="btn-pasang" class="btn btn-kecil" type="button">Pasang App</button>
+    </div>
+
+    <div id="tip-ios" class="kad tip" hidden>
+      <strong>Pasang di iPhone:</strong>
+      tekan butang <b>Kongsi</b>
+      <svg class="ikon-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      di bawah skrin Safari, kemudian pilih <b>“Tambah ke Skrin Utama”</b>.
+      <button class="tutup-tip" id="tutup-tip-ios" type="button" aria-label="Tutup">×</button>
+    </div>
+
+    <h2 class="tajuk-bahagian">1. Pilih warna</h2>
+    <div class="pilihan-warna" id="pilihan-warna" role="radiogroup" aria-label="Pilih warna"></div>
+
+    <h2 class="tajuk-bahagian">2. Pilih bingkai</h2>
+    <div class="grid-bingkai" id="grid-bingkai" role="radiogroup" aria-label="Pilih bingkai"></div>
+
+    <p id="status-baris-gilir" class="status-gilir" hidden></p>
+  </main>
+
+  <div class="bar-bawah">
+    <button id="btn-mula" class="btn btn-utama btn-besar" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      Mula Bergambar
+    </button>
+  </div>
+</section>
+
+<!-- ============ SKRIN 2: KAMERA ============ -->
+<section id="skrin-kamera" class="skrin" aria-label="Kamera">
+  <div class="bar-atas">
+    <button id="btn-kembali-kamera" class="btn-ikon" type="button" aria-label="Kembali">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="bar-tajuk" id="tajuk-kamera">Bingkai 1</span>
+    <button id="btn-tukar-kamera" class="btn-ikon" type="button" aria-label="Tukar kamera depan/belakang">
+      <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12.5a3 3 0 0 1 5.2-2M15 13.5a3 3 0 0 1-5.2 2M14.5 8.8v1.9h-1.9M9.5 17.2v-1.9h1.9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="pentas" id="pentas">
+    <canvas id="kanvas-pratonton" aria-label="Pratonton kamera dengan bingkai"></canvas>
+    <div id="kiraan" class="kiraan" aria-live="assertive"></div>
+    <div id="denyar" class="denyar"></div>
+    <div id="mesej-kamera" class="mesej-kamera" hidden>
+      <p id="teks-mesej-kamera">Membuka kamera…</p>
+      <div class="mesej-butang" id="butang-mesej-kamera" hidden>
+        <button id="btn-cuba-lagi" class="btn btn-kecil" type="button">Cuba lagi</button>
+        <button id="btn-galeri-alt" class="btn btn-kecil btn-garis" type="button">Pilih dari Galeri</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kawalan">
+    <div class="baris-zum">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5h5M15 15l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="zum" type="range" min="40" max="300" step="1" value="100" aria-label="Zum">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5h5M10.5 8v5M15 15l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <button id="label-zum" class="label-zum" type="button" title="Tekan untuk isi bingkai">Isi bingkai</button>
+    </div>
+    <div class="baris-butang">
+      <button id="btn-galeri" class="btn-bulat-kecil" type="button" aria-label="Pilih gambar dari Galeri">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.8" fill="currentColor"/><path d="M4 17l5-5 4 4 3-3 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span>Galeri</span>
+      </button>
+      <button id="btn-snap" class="btn-snap" type="button" aria-label="Ambil gambar"><span></span></button>
+      <button id="btn-kamera-semula" class="btn-bulat-kecil" type="button" aria-label="Kembali ke kamera" hidden>
+        <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <span>Kamera</span>
+      </button>
+      <span id="ruang-kosong" class="btn-bulat-kecil ruang" aria-hidden="true"></span>
+    </div>
+    <p id="petunjuk-kamera" class="petunjuk">Tekan butang bulat. Kiraan 3 saat akan bermula.</p>
+  </div>
+  <input id="input-galeri" type="file" accept="image/*" hidden>
+</section>
+
+<!-- ============ SKRIN 3: KEPUTUSAN ============ -->
+<section id="skrin-keputusan" class="skrin" aria-label="Gambar anda">
+  <div class="bar-atas">
+    <button id="btn-kembali-keputusan" class="btn-ikon" type="button" aria-label="Laman utama">
+      <svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="bar-tajuk">Gambar Anda</span>
+    <span class="btn-ikon ruang" aria-hidden="true"></span>
+  </div>
+
+  <div class="kotak-hasil">
+    <img id="img-hasil" alt="Gambar anda berserta bingkai">
+  </div>
+
+  <div class="panel-hasil">
+    <p id="status-muatnaik" class="status-muatnaik" role="status" aria-live="polite"></p>
+    <div class="baris-tindakan">
+      <button id="btn-simpan" class="btn btn-utama" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="label-simpan">Muat Turun</span>
+      </button>
+      <button id="btn-ulang" class="btn btn-garis" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Ambil Semula
+      </button>
+    </div>
+    <button id="btn-kongsi" class="btn btn-teks" type="button" hidden>Kongsi gambar…</button>
+    <p id="tip-simpan-ios" class="tip-kecil" hidden>
+      Tip iPhone: selepas tekan <b>Simpan ke Foto</b>, pilih <b>“Simpan Imej”</b> dalam menu Kongsi. Gambar akan masuk ke app <b>Foto</b>.
+    </p>
+  </div>
+</section>
+
+<!-- Paparan sandaran iPhone (jika menu Kongsi tidak tersedia) -->
+<div id="lapis-tekan-lama" class="lapis" hidden>
+  <div class="lapis-isi">
+    <p><b>Tekan lama</b> pada gambar, kemudian pilih <b>“Simpan ke Foto”</b>.</p>
+    <img id="img-tekan-lama" alt="Gambar untuk disimpan">
+    <button id="btn-tutup-lapis" class="btn btn-utama" type="button">Selesai</button>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
