@@ -50,6 +50,7 @@ svg { width: 24px; height: 24px; flex: none; }
 
 .kad { background: var(--lembut); border: 1px solid rgba(255,255,255,.14); border-radius: var(--jejari); padding: 14px 16px; margin-top: 12px; }
 .kad p { margin: 2px 0 0; color: var(--teks-pudar); font-size: 14px; }
+.amaran { background: rgba(220,38,38,.22); border-color: rgba(252,165,165,.6); font-size: 15px; line-height: 1.5; }
 .pasang { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .tip { position: relative; font-size: 15px; line-height: 1.5; padding-right: 44px; }
 .ikon-inline { width: 18px; height: 18px; vertical-align: -3px; }

@@ -53,7 +53,7 @@ function muatBingkai(b) {
       const im = new Image();
       im.onload = () => ok(im);
       im.onerror = gagal;
-      im.src = `frames/${b.id}.webp`;
+      im.src = `${b.id}.webp`;
     });
   }
   return imejBingkai[b.id];
@@ -193,7 +193,7 @@ function binaLamanUtama() {
     b.type = 'button'; b.className = 'kad-bingkai'; b.dataset.id = bk.id;
     b.setAttribute('role', 'radio');
     b.setAttribute('aria-checked', String(bk.id === keadaan.bingkai));
-    b.innerHTML = `<img src="frames/${bk.id}_kecil.webp" alt="" loading="lazy"><span>${bk.nama}</span>${bk.nota ? `<small>${bk.nota}</small>` : ''}`;
+    b.innerHTML = `<img src="${bk.id}_kecil.webp" alt="" loading="lazy"><span>${bk.nama}</span>${bk.nota ? `<small>${bk.nota}</small>` : ''}`;
     b.addEventListener('click', () => {
       keadaan.bingkai = bk.id; simpanTetapan('pb_bingkai', bk.id);
       gb.querySelectorAll('.kad-bingkai').forEach(x => x.setAttribute('aria-checked', String(x.dataset.id === bk.id)));
@@ -444,14 +444,17 @@ $('btn-snap').addEventListener('click', async () => {
     await janaGambar();
   } catch (err) {
     console.error(err);
-    toast('Maaf, gambar gagal dijana. Cuba lagi.');
+    toast(err && err.message === 'tiada-bingkai'
+      ? 'Fail bingkai tidak ditemui. Sila hubungi penganjur.'
+      : 'Maaf, gambar gagal dijana. Cuba lagi.');
     keadaan.sedangAmbil = false; $('btn-snap').disabled = false;
   }
 });
 
 async function janaGambar() {
   const b = bingkaiSemasa();
-  const im = await muatBingkai(b);
+  let im;
+  try { im = await muatBingkai(b); } catch (e) { imejBingkai[b.id] = null; throw new Error('tiada-bingkai'); }
   const W = Math.round(b.w * SKALA_OUTPUT), H = Math.round(b.h * SKALA_OUTPUT);
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
@@ -648,6 +651,24 @@ window.addEventListener('offline', () => {
 document.addEventListener('visibilitychange', () => { if (!document.hidden) prosesGilir(); });
 setInterval(() => prosesGilir(), 30000);
 
+/* ---------- Semak fail bingkai ada (untuk bantu kesan masalah muat naik) ---------- */
+function amaran(teks) {
+  const el = $('amaran-fail');
+  el.innerHTML = teks; el.hidden = false;
+}
+async function semakFail() {
+  if (location.protocol === 'file:') {
+    amaran('<strong>Aplikasi dibuka terus dari komputer.</strong> Gambar tidak boleh dijana dengan cara ini. Sila buka melalui pautan GitHub Pages (https://…github.io/…).');
+    return;
+  }
+  const hilang = [];
+  await Promise.all(BINGKAI.map(b => muatBingkai(b).catch(() => { hilang.push(b.id + '.webp'); imejBingkai[b.id] = null; })));
+  if (hilang.length) {
+    amaran('<strong>Fail bingkai tidak ditemui:</strong> ' + hilang.sort().join(', ') +
+      '. Pastikan SEMUA fail dimuat naik ke GitHub (termasuk fail .webp dan .png).');
+  }
+}
+
 /* ---------- Toast ---------- */
 let masaToast = 0;
 function toast(t) {
@@ -658,7 +679,7 @@ function toast(t) {
 /* ---------- Mula ---------- */
 binaLamanUtama();
 sediaPasang();
-BINGKAI.forEach(b => muatBingkai(b).catch(() => {}));
+semakFail();
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW', e)));

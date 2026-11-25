@@ -1,9 +1,9 @@
 /* Service worker: simpan semua fail aplikasi supaya boleh dibuka tanpa internet. */
-const VERSI = 'photobooth-v1';
+const VERSI = 'photobooth-v2';
 const FAIL = [
   './', './index.html', './styles.css', './app.js', './config.js', './manifest.webmanifest',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
-  ...[1, 2, 3, 4, 5, 6].flatMap(n => [`./frames/bingkai${n}.webp`, `./frames/bingkai${n}_kecil.webp`])
+  './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
+  ...[1, 2, 3, 4, 5, 6].flatMap(n => [`./bingkai${n}.webp`, `./bingkai${n}_kecil.webp`])
 ];
 
 self.addEventListener('install', (e) => {
